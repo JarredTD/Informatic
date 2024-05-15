@@ -1,4 +1,4 @@
-package informatic.modid;
+package informatic.modid.HUDRenderer;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
