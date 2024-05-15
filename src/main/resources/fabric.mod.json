@@ -1,0 +1,41 @@
+{
+	"schemaVersion": 1,
+	"id": "informatic",
+	"version": "${version}",
+	"name": "Informatic",
+	"description": "This is an example description! Tell everyone what your mod is about!",
+	"authors": [
+		"Me!"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/informatic/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"informatic.modid.Informatic"
+		],
+		"client": [
+			"informatic.modid.InformaticClient"
+		]
+	},
+	"mixins": [
+		"informatic.mixins.json",
+		{
+			"config": "informatic.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.15.11",
+		"minecraft": "~1.20.6",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
