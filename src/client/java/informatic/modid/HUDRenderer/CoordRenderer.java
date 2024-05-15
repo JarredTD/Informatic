@@ -4,11 +4,11 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 
-public class HUDRenderer {
+public class CoordRenderer {
 
     private final MinecraftClient client;
 
-    public HUDRenderer(MinecraftClient client) {
+    public CoordRenderer(MinecraftClient client) {
         this.client = client;
     }
 
