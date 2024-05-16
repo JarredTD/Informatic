@@ -1,20 +1,32 @@
-package informatic.modid.HUDRender;
+package informatic.modid.HUDRender.Cardinal;
 
+import informatic.modid.Util.Direction;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.Text;
 
 public class CoordRender {
 
   public static String getCoords(MinecraftClient client) {
-    if (client.player != null && client.getWindow() != null) {
-
-      int x = (int) client.player.getX();
-      int y = (int) client.player.getY();
-      int z = (int) client.player.getZ();
-      String direction = client.player.getFacing().toString();
-
-      return String.format("x: %d, y: %d, z: %d, d: %s", x, y, z, direction);
+    if (client.player == null || client.getWindow() == null) {
+      return "";
     }
-    return "";
+
+    int x = (int) client.player.getX();
+    int y = (int) client.player.getY();
+    int z = (int) client.player.getZ();
+    Direction direction = DirectionRender.getDirection(client);
+
+    return switch (direction) {
+      case NORTH -> String.format("X: %d, Y: %d, (-)Z: %d", x, y, z);
+      case SOUTH -> String.format("X: %d, Y: %d, (+)Z: %d", x, y, z);
+      case WEST -> String.format("(-)X: %d, Y: %d, Z: %d", x, y, z);
+      case EAST -> String.format("(+)X: %d, Y: %d, Z: %d", x, y, z);
+      case NORTHEAST -> String.format("(+)X: %d, Y: %d, (-)Z: %d", x, y, z);
+      case SOUTHEAST -> String.format("(+)X: %d, Y: %d, (+)Z: %d", x, y, z);
+      case NORTHWEST -> String.format("(-)X: %d, Y: %d, (-)Z: %d", x, y, z);
+      case SOUTHWEST -> String.format("(-)X: %d, Y: %d, (+)Z: %d", x, y, z);
+      case UNKNOWN -> "";
+    };
   }
+
+
 }
