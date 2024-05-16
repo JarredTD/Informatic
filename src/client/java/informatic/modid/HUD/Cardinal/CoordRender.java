@@ -1,4 +1,4 @@
-package informatic.modid.HUDRender.Cardinal;
+package informatic.modid.HUD.Cardinal;
 
 import informatic.modid.Util.Direction;
 import net.minecraft.client.MinecraftClient;

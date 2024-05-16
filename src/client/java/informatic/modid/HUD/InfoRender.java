@@ -1,8 +1,8 @@
-package informatic.modid.HUDRender;
+package informatic.modid.HUD;
 
 
-import informatic.modid.HUDRender.Cardinal.CoordRender;
-import informatic.modid.HUDRender.Cardinal.DirectionRender;
+import informatic.modid.HUD.Cardinal.CoordRender;
+import informatic.modid.HUD.Cardinal.DirectionRender;
 import informatic.modid.Util.Coordinate;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -19,7 +19,7 @@ public class InfoRender {
     this.client = client;
   }
 
-  public void renderInfo(DrawContext drawContext, float tickDelta) {
+  public void renderInfo(DrawContext drawContext, float ignoredTickDelta) {
 
     // Reset offset per tick
     int verticalOffset = 5;
