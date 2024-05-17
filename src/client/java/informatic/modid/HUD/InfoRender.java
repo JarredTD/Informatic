@@ -1,94 +1,109 @@
 package informatic.modid.HUD;
 
-
 import informatic.modid.HUD.Cardinal.CoordRender;
 import informatic.modid.HUD.Cardinal.DirectionRender;
 import informatic.modid.HUD.Ecological.BiomeRender;
 import informatic.modid.Util.Coordinate;
+import informatic.modid.Util.Direction;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.text.Text;
+import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.dimension.DimensionTypes;
+
+import java.util.Optional;
 
 public class InfoRender {
 
   private static final int WHITE = 0xFFFFFF;
+  private static final float TEXT_SCALE = .82f;
+  private static final int VERTICAL_OFFSET_INCREMENT = 2;
+  private static final int HORIZONAL_OFFSET_INCREMENT = 5;
   private final MinecraftClient client;
 
-  private int horizontalOffset = 5;
+  private int horizontalOffset;
+  private int verticalOffset;
 
   public InfoRender(MinecraftClient client) {
     this.client = client;
+    resetOffsets();
+  }
+
+  private void resetOffsets() {
+    this.horizontalOffset = HORIZONAL_OFFSET_INCREMENT;
+    this.verticalOffset = VERTICAL_OFFSET_INCREMENT;
   }
 
   public void renderInfo(DrawContext drawContext, float ignoredTickDelta) {
-
-    // Reset offset per tick
-    int verticalOffset = 5;
-    horizontalOffset = 5;
+    if (client == null || client.world == null) {
+      return;
+    }
 
     int width = client.getWindow().getScaledWidth();
-    int height = client.getWindow().getScaledHeight();
 
-    renderCoords( // Coordinates
-        drawContext,
-        new Coordinate(width, verticalOffset),
-        CoordRender.getCoords(client));
+    drawContext.getMatrices().push();
+    drawContext.getMatrices().scale(TEXT_SCALE, TEXT_SCALE, 1f);
 
-    verticalOffset += client.textRenderer.fontHeight + 5;
+    int scaledWidth = (int) (width / TEXT_SCALE);
+    resetOffsets();
 
-    renderDirection( // Direction
-        drawContext,
-        new Coordinate(width, verticalOffset),
-        DirectionRender.getDirection(client).toString());
+    RegistryKey<DimensionType> dimensionTypeKey = getDimensionTypeKey();
+    Coordinate playerCoordinate = CoordRender.getPlayerCoordinate(client);
+    Direction direction = DirectionRender.getDirection(client);
 
-    verticalOffset += client.textRenderer.fontHeight + 5;
+    renderPlayerCoordinate(drawContext, scaledWidth, playerCoordinate, direction, dimensionTypeKey);
+    renderDirection(drawContext, scaledWidth, direction.toString());
+    renderBiome(drawContext, scaledWidth, BiomeRender.getBiome(client));
 
-    renderBiome( // Biome
-        drawContext,
-        new Coordinate(width, verticalOffset),
-        BiomeRender.getBiome(client));
-
-    verticalOffset += client.textRenderer.fontHeight + 5;
-
+    drawContext.getMatrices().pop();
   }
 
-  public void renderCoords(DrawContext drawContext, Coordinate position, String coords) {
+  private RegistryKey<DimensionType> getDimensionTypeKey() {
+    if (client.world == null) {
+      return null;
+    }
 
-    int x = position.x() - client.textRenderer.getWidth(Text.of(coords)) - horizontalOffset;
-    int y = position.y();
-
-    drawContext.drawText(
-        MinecraftClient.getInstance().textRenderer,
-        coords,
-        x,
-        y,
-        WHITE,
-        false);
+    Optional<RegistryKey<DimensionType>> dimension = client.world.getDimensionEntry().getKey();
+    return dimension.orElse(null);
   }
 
-  public void renderDirection(DrawContext drawContext, Coordinate position, String direction) {
-    int x = position.x() - client.textRenderer.getWidth((Text.of(direction))) - horizontalOffset;
-    int y = position.y();
+  private void renderPlayerCoordinate(DrawContext drawContext, int screenWidth,
+      Coordinate playerPOS, Direction direction,
+      RegistryKey<DimensionType> dimensionType) {
+    if (dimensionType == null) {
+      return;
+    }
 
-    drawContext.drawText(
-        MinecraftClient.getInstance().textRenderer,
-        direction,
-        x,
-        y,
-        WHITE,
-        false);
+    if (dimensionType == DimensionTypes.OVERWORLD) {
+      drawText(drawContext, "Overworld " + playerPOS.display(direction), screenWidth);
+      drawText(drawContext, "Nether " + playerPOS.toNether().display(direction), screenWidth);
+    } else if (dimensionType == DimensionTypes.THE_NETHER) {
+      drawText(drawContext, "Nether " + playerPOS.display(direction), screenWidth);
+      drawText(drawContext, "Overworld " + playerPOS.toOverworld().display(direction), screenWidth);
+    } else {
+      drawText(drawContext, playerPOS.display(direction), screenWidth);
+    }
   }
 
-  public void renderBiome(DrawContext drawContext, Coordinate position, String biome) {
-    int x = position.x() - client.textRenderer.getWidth((Text.of(biome))) - horizontalOffset;
-    int y = position.y();
+  private void renderDirection(DrawContext drawContext, int screenWidth, String direction) {
+    drawText(drawContext, direction, screenWidth);
+  }
 
-    drawContext.drawText(
-        MinecraftClient.getInstance().textRenderer,
-        biome,
-        x,
-        y,
-        WHITE,
-        false);
+  private void renderBiome(DrawContext drawContext, int screenWidth, String biome) {
+    drawText(drawContext, biome, screenWidth);
+  }
+
+  private void drawText(DrawContext drawContext, String text, int screenWidth) {
+    int scaledHorizontalOffset = (int) (horizontalOffset / TEXT_SCALE);
+    int scaledVerticalOffset = (int) (verticalOffset / TEXT_SCALE);
+
+    int x = screenWidth - client.textRenderer.getWidth(Text.of(text)) - scaledHorizontalOffset;
+    int y = scaledVerticalOffset;
+
+    drawContext.drawText(client.textRenderer, Text.of(text), x, y, WHITE, false);
+
+    verticalOffset += (int) ((client.textRenderer.fontHeight * TEXT_SCALE)
+        + VERTICAL_OFFSET_INCREMENT);
   }
 }
