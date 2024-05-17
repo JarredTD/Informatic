@@ -3,6 +3,7 @@ package informatic.modid.HUD;
 
 import informatic.modid.HUD.Cardinal.CoordRender;
 import informatic.modid.HUD.Cardinal.DirectionRender;
+import informatic.modid.HUD.Ecological.BiomeRender;
 import informatic.modid.Util.Coordinate;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -42,6 +43,13 @@ public class InfoRender {
 
     verticalOffset += client.textRenderer.fontHeight + 5;
 
+    renderBiome( // Biome
+        drawContext,
+        new Coordinate(width, verticalOffset),
+        BiomeRender.getBiome(client));
+
+    verticalOffset += client.textRenderer.fontHeight + 5;
+
   }
 
   public void renderCoords(DrawContext drawContext, Coordinate position, String coords) {
@@ -65,6 +73,19 @@ public class InfoRender {
     drawContext.drawText(
         MinecraftClient.getInstance().textRenderer,
         direction,
+        x,
+        y,
+        WHITE,
+        false);
+  }
+
+  public void renderBiome(DrawContext drawContext, Coordinate position, String biome) {
+    int x = position.x() - client.textRenderer.getWidth((Text.of(biome))) - horizontalOffset;
+    int y = position.y();
+
+    drawContext.drawText(
+        MinecraftClient.getInstance().textRenderer,
+        biome,
         x,
         y,
         WHITE,

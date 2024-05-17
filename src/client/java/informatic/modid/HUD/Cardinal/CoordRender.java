@@ -7,7 +7,7 @@ public class CoordRender {
 
   public static String getCoords(MinecraftClient client) {
     if (client.player == null || client.getWindow() == null) {
-      return "";
+      return "Unknown";
     }
 
     int x = (int) client.player.getX();
@@ -24,7 +24,7 @@ public class CoordRender {
       case SOUTHEAST -> String.format("(+)X: %d, Y: %d, (+)Z: %d", x, y, z);
       case NORTHWEST -> String.format("(-)X: %d, Y: %d, (-)Z: %d", x, y, z);
       case SOUTHWEST -> String.format("(-)X: %d, Y: %d, (+)Z: %d", x, y, z);
-      case UNKNOWN -> "";
+      case UNKNOWN -> "Unknown";
     };
   }
 

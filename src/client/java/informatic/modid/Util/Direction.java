@@ -23,7 +23,7 @@ public enum Direction {
       case SOUTHEAST -> "Southeast";
       case NORTHWEST -> "Northwest";
       case SOUTHWEST -> "Southwest";
-      default -> "";
+      case UNKNOWN -> "Unknown";
     };
   }
 }
