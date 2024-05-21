@@ -14,7 +14,7 @@ import net.minecraft.world.dimension.DimensionTypes;
 
 import java.util.Optional;
 
-public class InfoRender {
+public class HudRender {
 
   private static final int WHITE = 0xFFFFFF;
   private static final float TEXT_SCALE = .82f;
@@ -25,7 +25,7 @@ public class InfoRender {
   private int horizontalOffset;
   private int verticalOffset;
 
-  public InfoRender(MinecraftClient client) {
+  public HudRender(MinecraftClient client) {
     this.client = client;
     resetOffsets();
   }
