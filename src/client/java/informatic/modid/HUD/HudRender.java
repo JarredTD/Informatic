@@ -2,9 +2,13 @@ package informatic.modid.HUD;
 
 import informatic.modid.HUD.Cardinal.CoordRender;
 import informatic.modid.HUD.Cardinal.DirectionRender;
+import informatic.modid.HUD.CrosshairData.CrosshairDataRender;
 import informatic.modid.HUD.Ecological.BiomeRender;
-import informatic.modid.Util.Coordinate;
-import informatic.modid.Util.Direction;
+import informatic.modid.Util.Cardinal.Coordinate;
+import informatic.modid.Util.CrosshairData.BlockData;
+import informatic.modid.Util.CrosshairData.CrosshairData;
+import informatic.modid.Util.CrosshairData.LivingEntityData;
+import informatic.modid.Util.Cardinal.Direction;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.registry.RegistryKey;
@@ -55,6 +59,7 @@ public class HudRender {
     renderPlayerCoordinate(drawContext, scaledWidth, playerCoordinate, direction, dimensionTypeKey);
     renderDirection(drawContext, scaledWidth, direction.toString());
     renderBiome(drawContext, scaledWidth, BiomeRender.getBiome(client));
+    renderCrosshairData(drawContext, scaledWidth, CrosshairDataRender.getCrosshairData(client));
 
     drawContext.getMatrices().pop();
   }
@@ -92,6 +97,31 @@ public class HudRender {
 
   private void renderBiome(DrawContext drawContext, int screenWidth, String biome) {
     drawText(drawContext, biome, screenWidth);
+  }
+
+  private void renderCrosshairData(DrawContext drawContext, int screenWidth,
+      CrosshairData crosshairData) {
+
+    if (crosshairData == null) {
+      return;
+    }
+
+    switch (crosshairData) {
+      case LivingEntityData livingEntityData -> {
+        drawText(drawContext, livingEntityData.getName(), screenWidth);
+        drawText(drawContext, Float.toString(livingEntityData.getHealth()), screenWidth);
+      }
+      case BlockData blockData -> {
+        drawText(drawContext, blockData.getName(), screenWidth);
+
+        String toolAndLevel = String.format("%s %s", blockData.getLevel().display(),
+            blockData.getTool().display());
+
+        drawText(drawContext, toolAndLevel, screenWidth);
+      }
+      default -> {
+      }
+    }
   }
 
   private void drawText(DrawContext drawContext, String text, int screenWidth) {
