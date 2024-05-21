@@ -1,6 +1,6 @@
 package informatic.modid.HUD.Cardinal;
 
-import informatic.modid.Util.Direction;
+import informatic.modid.Util.Cardinal.Direction;
 import net.minecraft.client.MinecraftClient;
 
 public class DirectionRender {

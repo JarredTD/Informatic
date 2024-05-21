@@ -1,4 +1,4 @@
-package informatic.modid.Util;
+package informatic.modid.Util.Cardinal;
 
 public record Coordinate(int x, int y, int z) {
 
