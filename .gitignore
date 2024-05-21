@@ -242,6 +242,7 @@ gradle-app.setting
 *.hprof
 
 run
+.idea
 
 
 # End of https://www.toptal.com/developers/gitignore/api/gradle,intellij,java,macos,windows,linux
